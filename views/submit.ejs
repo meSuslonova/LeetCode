@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title>AlgoMaster</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+
+<body> <%- include('blocks/header') -%>
+    <main>
+      <section class="task-section">
+          <% if (task) { %>
+            <div class="task-card2">
+              <h3>
+                <%= task.title %>
+                  <h3>
+                    <p>
+                      <span>Description:</span>
+                      <%= task.description %>
+                    </p>
+                    <p>
+                      <span>Difficulty:</span>
+                      <%= task.difficulty %>
+                    </p>
+                    <p>
+                      <span>Tags:</span>
+                      <%= task.tags ? task.tags.join(', ') : '' %>
+                  </p>
+                  <div class="task-files">
+                  <p><span>Files:</span>
+                      <% if (task.files) { %>
+                        <% task.files.forEach(file => { %>
+                          <a href="uploads/<%= file %>"><%= file %></a>
+                        <% }); %>
+                      <% } %>
+                    </p>
+                  </div>  
+                  <div class="task-links">        
+                    <p><span>Links:</span>
+                      <% if (task.links) { %>
+                        <% task.links.forEach(link => { %>
+                          <a href="<%= link.url %>"><%= link.title %></a>
+                        <% }); %>
+                      <% } %>
+                    </p>
+                  </div>
+                  <a href="/tasks">К списку задач</a>
+                </div>
+                  <!-- Комментарии -->
+                  <div class="task-comments">
+                    <h2>Комментарии</h2>
+            
+                    <% if (isAuthenticated) { %>
+                      <form action="/submit/<%= task._id %>" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <input type="text" id="content" name="content" placeholder="Введите комментарий" required></textarea>
+                        <button type="submit">Отправить</button>
+                      </form>
+                    <% } %>
+                    <div class="comment">             
+                    <% if (comments) { %>
+                      <ul>
+                        <% comments.forEach(comment => { %>
+                          <li>
+                            <p><span><%= comment.username %></span>
+                            <%= comment.content %></p><p1><%= comment.createdAt.toLocaleString() %></p1>
+                              <form action="/deleteComment/<%= comment._id %>" method="POST">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" onclick="return confirm(' Вы уверены, что хотите удалить этот комментарий?')">Удалить</button>
+                              </form>
+                          </li>
+                        <% }); %>
+                      </ul>
+                    <% } %>
+            </div>
+            <!-- Конец комментариев -->
+        </div>
+        </div>
+      </section>
+      <% } %>
+        </div>
+        </section>
+    </main>
+
+    <footer>
+      <p>Все права защищены &copy; 2024</p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <title>AlgoMaster</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <%- include('blocks/header') -%>
+        <main>
+            <div class="user-profile-container">
+                <div class="user-profile">
+                    <div class="profile-info">
+                        <h2>Пользователь</h2>
+                        <p>
+                            <span class="profile-label">Имя:</span>
+                            <span class="profile-value">
+                                <%= username %>
+                            </span>
+                        </p>
+                        <p>
+                            <span class="profile-label">Email:</span>
+                            <span class="profile-value">
+                                <%= email %>
+                            </span>
+                        </p>
+                        <p>
+                            <span class="profile-label">Role:</span>
+                            <span class="profile-value">
+                                <%= role %>
+                            </span>
+                        </p>
+                        <p>
+                            <span class="profile-label">Рейтинг:</span>
+                            <span class="profile-value">
+                                <%= averageRating.toFixed(1) %>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="user-settings">
+                        <h2>Настройки</h2>
+                        <ul>
+                            <li><a href="/settings/password">Изменить пароль</a></li>
+                            <li><a href="/settings/notifications">Управление уведомлениями</a></li>
+                            <li><a href="/settings/appearance">Настройка внешнего вида</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="user-content">
+
+                        <div class="user-comments">
+                            <h2>Участие в обсуждении</h2>
+                            <ul>
+                                <% tasks.forEach(task => { %>
+                                    <li>
+                                        <a href="/submit/<%= task._id %>">
+                                            <%= task.title %>
+                                        </a>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                                <% if (user && user.role==='admin' ) { %>
+                        <div class="users">
+                            <h2>Пользователи</h2>
+                            <ul>
+
+                                    <li>
+                                        <a href="/admin/users">Просмотреть всех пользователей</a>
+                                    </li>
+                                    <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </main>
+        <footer>
+            <p>Все права защищены &copy; 2024</p>
+        </footer>
+</body>
+
+</html>
