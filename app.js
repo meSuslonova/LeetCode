@@ -676,8 +676,8 @@ app.post('/createTask', csrfProtection, [
         const files = req.files || []; // Если req.files не определено, установите пустой массив
         const filenames = files.map(file => file.filename);
         const links = req.body.links.split(',').map(link => {
-            const [url, title] = link.split('|'); // Assuming links are in the format "url|title"
-            return { url, title };
+            const [title,url ] = link.split('-'); // Assuming links are in the format "title-url"
+            return { title,url };
         });
 
         const task = new Task({
@@ -836,14 +836,15 @@ app.post('/submit/:id', async (req, res, next) => {
             return res.status(404).send('Task not found');
         }
 
-        const comment = await Comment.create({
+        const newCommentData  = await Comment.create({
             username: req.user.username,
             content: req.body.content,
             taskId: req.params.id,
             public: true,
-            createdAt: new Date()
+            createdAt: req.body.createdAt || new Date()
         });
 
+        const comment = await Comment.create(newCommentData);
         const comments = await Comment.find({ taskId: req.params.id, visibility: 'public' })
         .sort({ createdAt: 'desc' });
 
