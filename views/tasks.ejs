@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title>AlgoMaster</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+
+<body>
+  <%- include('blocks/header') -%>
+
+    <main>
+      
+        <h1>Все задачи</h1>
+        <% if (isAuthenticated && user.role==='admin' ) { %>
+          <nav>
+            <a href="/createTask">Сoздание новой задачи</a>
+          </nav>
+          <% } %>
+          <section class="task-section">
+            <div class="task-cards">
+              <% tasks.forEach(task=> { %>
+                <div class="task-card">
+                  <h3>
+                    <%= task.title %>
+                  </h3>
+                  <p>
+                    Описание задачи:
+                    <%= task.description %>
+                  </p>
+                  <p>
+                    Уровень сложности:
+                    <%= task.difficulty %>
+                  </p>
+                  <p>
+                    Ключевые слова:
+                    <%= task.tags ? task.tags.join(', ') : '' %>
+                            </p>
+            <div class="task-files">
+              <p>Файлы:             
+                <% if (task.files) { %>
+                  <% task.files.forEach(file => { %>
+                    <a href="uploads/<%= file %>"><%= file %></a>
+                  <% }); %>
+                <% } %>
+              </p>
+            </div>
+            <div class="task-links">
+              <p>Ссылки:
+                  <% if (task.links) { %>
+                  <% task.links.forEach(link => { %>
+                    <a href="<%= link.url %>"><%= link.title %></a>
+                  <% }); %>
+                <% } %>
+              </p>
+            </div>
+            <div class="task-actions">
+              <% if (isAuthenticated && user.role==='admin' ) { %>
+                <div class="admin-buttons">
+                <form action="/deleteTask/<%= task._id %>" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить эту задачу?')">Удалить задачу</button>
+                </form>
+                  <form action="/editTask/<%= task._id %>" >
+                  <button type="submit">Изменить задачу</button>
+                    </form>
+                  </div>
+              <% } %>
+              <a href="/submit/<%= task._id %>">Оставить комментарий</a>
+              <a href="/discuss/<%= task._id %>">Обсудить решение</a>
+          </div>
+            </div>
+            <% }); %>
+              </div>
+      </section>
+</main>
+
+    <footer>
+      <p>Все права защищены &copy; 2024</p>
+    </footer>
+</body>
+
+</html>
