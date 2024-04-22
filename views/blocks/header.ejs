@@ -1,0 +1,21 @@
+
+<header>
+    <span><a href="/">AlgoMaster</a></span>
+    <nav>
+        <a href="/" class="<%= activeTab === 'home' ? 'active' : '' %>">Главная</a>
+        <a href="/about" class="<%= activeTab === 'about' ? 'active' : '' %>">Про нас</a>
+        <a href="/tasks" class="<%= activeTab === 'tasks' ? 'active' : '' %>">Задачи</a>
+        <% if(isAuthenticated) { %>
+            <a href="/dashboard" class="<%= activeTab === 'dashboard' ? 'active' : '' %>">Моя страница</a>
+            <a href="/logout" class="none" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <button type="submit">Выйти</button>
+            </a>
+            <form id="logout-form" action="/logout" method="POST" style="display: none; ">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            </form>
+            <% } else { %>
+                <a href="/login" class="<%= activeTab === 'login' ? 'active' : '' %>">Войти</a>
+                <a href="/registration" class="<%= activeTab === 'registration' ? 'active' : '' %>">Регистрация</a>
+                <% } %>
+    </nav>
+</header>
